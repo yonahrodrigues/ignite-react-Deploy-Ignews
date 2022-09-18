@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { RichText } from "prismic-dom";
 import { useEffect } from "react";
 import { getPrismicClient } from "../../../services/prismic";
+import { server } from "../../config";
 
 import styles from "../post.module.scss";
 
@@ -19,15 +20,14 @@ interface PostPreviewProps {
 }
 
 export default function PostPreview({ post }: PostPreviewProps) {
-
   const [session] = useSession();
   const router = useRouter();
 
   useEffect(() => {
-   if (session?.activeSubscription) {
-    router.push(`/posts/${post.slug}`)
-   }
-  }, [session])
+    if (session?.activeSubscription) {
+      router.push(`${server}/posts/${post.slug}`);
+    }
+  }, [session]);
 
   return (
     <>
@@ -47,8 +47,7 @@ export default function PostPreview({ post }: PostPreviewProps) {
             Wanna continue reading?
             <Link href="/">
               <a> Subscribe Now 🤗</a>
-            </Link>  
-            
+            </Link>
           </div>
         </article>
       </main>
@@ -59,15 +58,14 @@ export default function PostPreview({ post }: PostPreviewProps) {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking'
-  }
-}
+    fallback: "blocking",
+  };
+};
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  
   const { slug } = params;
 
-  const prismic = getPrismicClient()
+  const prismic = getPrismicClient();
 
   const response = await prismic.getByUID<any>("publication", String(slug), {});
 

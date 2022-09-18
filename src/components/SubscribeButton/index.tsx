@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { api } from '../../services/api';
 import { getStripeJs } from '../../services/stripe-js';
 import styles from "./styles.module.scss";
-
+import { server } from "../../config";
 interface SubscribeButtonProps {
     priceId: string;
 }
@@ -22,7 +22,7 @@ export function SubscribeButton({ priceId } :SubscribeButtonProps) {
 
         if (session.activeSubscription) {
 
-            router.push('/posts');
+            router.push(`${server}/posts`);
             return;
         }
 
